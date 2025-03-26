@@ -1,5 +1,5 @@
+import { Navbar } from "@/components/molecules";
 import React from "react";
-import Navbar from "@/components/molecules/navbar";
 
 const App = () => {
    return (
