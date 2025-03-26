@@ -1,12 +1,12 @@
-import React from 'react'
-import { Loader } from '@/components/atoms';
+import React from "react";
+import Navbar from "@/components/molecules/navbar";
 
 const App = () => {
-  return (
-    <div className='h-screen w-screen flex items-center justify-center'>
-      <Loader />
-    </div>
-  )
-}
+   return (
+      <div className="w-screen h-screen">
+         <Navbar />
+      </div>
+   );
+};
 
-export default App
+export default App;
