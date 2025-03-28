@@ -1,23 +1,16 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/state/auth-store";
-import React from "react";
 
-const Navbar = () => {
-   const { logout } = useAuthStore();
-   
+export default function Navbar() {
+
    return (
-      <nav className="p-4 px-6 self-end flex items-center justify-between border-b border-b-gray-300">
-         <span className="text-2xl font-semibold ">
-            <span className="text-blue-400">Doc</span>.ai
-         </span>
-         <div>
-            <Button className="bg-blue-400 text-white cursor-pointer" onClick={logout}>
-               Logout
-            </Button>
+      <nav className="sticky top-0 z-30 w-full shadow-sm bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+         <div className="flex h-16 items-center px-4 md:px-6">
+            <div className="md:hidden w-8" />
+
+            <div className="flex flex-1 items-center justify-between">
+               <h2 className="text-lg font-semibold">User Management</h2>
+            </div>
          </div>
       </nav>
    );
-};
-
-export default Navbar;
+}
