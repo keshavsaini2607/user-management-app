@@ -1,22 +1,45 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuthStore } from "@/state/auth-store";
 import { useRouter } from "next/navigation";
 import { DynamicForm } from "@/components/organisms";
 import { LOGIN_FORM_FIELDS } from "@/constants";
 import Link from "next/link";
+import { useApiMutation } from "@/hooks/useApi";
+import { API_ENDPOINTS } from "@/constants/endpoints";
+import { toast } from "sonner";
 
 const SignIn = () => {
-    const { login } = useAuthStore();
-    const router = useRouter();
+   const { mutate, isPending, error, data } = useApiMutation(
+      "POST",
+      API_ENDPOINTS.SIGNIN
+   );
+   const { login } = useAuthStore();
+   const router = useRouter();
 
-   const handleLogin = (data: any) => {
-      console.log(data);
-      const dummyToken = "dummy-jwt-token";
-      login(dummyToken);
-      router.push("/");
+   const handleLogin = async (formData: any) => {
+      try {
+         mutate(formData);
+      } catch (error) {
+         console.error("Login failed:", error);
+      }
    };
+
+   useEffect(() => {
+      if (data && data?.backendTokens?.token) {
+         console.log("data", data);
+         toast("Login successful");
+         login(data?.backendTokens?.token);
+         router.push("/");
+      }
+   }, [data]);
+
+   useEffect(() => {
+      if (error) {
+         toast(error?.response?.data?.message || "Something went wrong");
+      }
+   }, [error]);
 
    return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -29,7 +52,7 @@ const SignIn = () => {
             <DynamicForm
                formFields={LOGIN_FORM_FIELDS}
                onSubmit={handleLogin}
-               submitButtonText="Login"
+               submitButtonText={isPending ? "Loading" : "Login"}
             />
             <div className="grid place-items-end">
                <span className="text-sm font-semibold">
