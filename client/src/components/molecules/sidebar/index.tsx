@@ -7,8 +7,10 @@ import { useAuthStore } from "@/state/auth-store";
 import { SideNavLinks } from "@/constants/nav_data";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUserStore } from "@/state/user-store";
 
 export default function Sidebar() {
+   const { user } = useUserStore();
    const [isOpen, setIsOpen] = useState(true);
    const [isMobile, setIsMobile] = useState(false);
    const [activeSideNav, setActiveSideNav] = useState("");
@@ -85,16 +87,19 @@ export default function Sidebar() {
 
                <nav className="space-y-2 flex flex-col">
                   {SideNavLinks.map((link, idx) => (
-                     <Link 
-                        href={link.href} 
+                     <Link
+                        href={link.href}
                         key={idx}
                         className={cn(
                            "flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100",
-                           activeSideNav === link.title && "bg-blue-50"
+                           activeSideNav === link.title && "bg-blue-50",
+                           !link.isProtected || (user && user.role === "admin")
+                              ? "flex"
+                              : "hidden"
                         )}
                      >
-                        <link.icon 
-                           size={20} 
+                        <link.icon
+                           size={20}
                            className={cn(
                               "text-gray-600",
                               activeSideNav === link.title && "text-blue-500"
