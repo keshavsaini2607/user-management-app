@@ -40,7 +40,8 @@ export const useApiQuery = (key: string, url: string, options = {}) => {
 export const useApiMutation = <T, R = any>(
   method: string,
   url: string,
-  options: UseMutationOptions<R, unknown, T> = {}
+  options: UseMutationOptions<R, unknown, T> = {},
+  extraHeaders: Record<string, string> = {}
 ) => {
   return useMutation<R, unknown, T>({
     mutationFn: async (data: T) => {
@@ -50,7 +51,10 @@ export const useApiMutation = <T, R = any>(
           method, 
           url, 
           data,
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            ...extraHeaders
+          }
         });
         return response.data;
       } catch (error: any) {

@@ -25,6 +25,7 @@ export class UploadsController {
     @Res() res,
   ) {
     try {
+      console.log('file', file);
       if (!file) {
         return res.status(400).json({
           message: 'No file uploaded',
@@ -54,4 +55,5 @@ export class UploadsController {
   async getUserFiles(@Req() req) {
     return this.uploadsService.getUserFiles(req.user.id);
   }
+  
 }

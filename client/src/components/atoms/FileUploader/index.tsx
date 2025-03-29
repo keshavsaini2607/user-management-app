@@ -1,9 +1,12 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import LoaderModal from "../LoaderModal";
+import { useApiMutation } from "@/hooks/useApi";
+import { API_ENDPOINTS } from "@/constants/endpoints";
+import Spinner from "../Spinner";
+import { toast } from "sonner";
 
 interface FileUploaderProps {
    onFileSelect?: (file: File) => void;
@@ -14,9 +17,16 @@ const FileUploader: React.FC<FileUploaderProps> = ({
    onFileSelect,
    accept = "application/pdf",
 }) => {
+   const { isPending, data, error, mutate } = useApiMutation(
+      "POST",
+      API_ENDPOINTS.UPLOAD_FILE,
+      {},
+      {
+         "Content-Type": "multipart/form-data",
+      }
+   );
    const [isDragging, setIsDragging] = useState(false);
    const [file, setFile] = useState<File | null>(null);
-   const [showUploadModal, setShowUploadModal] = useState(false);
 
    const handleDrag = useCallback((e: React.DragEvent) => {
       e.preventDefault();
@@ -53,6 +63,32 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       },
       [onFileSelect]
    );
+
+   const handleUpload = useCallback(() => {
+      if (file) {
+         const formData = new FormData();
+         formData.append("file", file);
+         console.log("Uploading file:", file.name);
+         for (const pair of formData.entries()) {
+            console.log("pair", pair[0], pair[1]); // Ensure file is present
+         }
+         mutate(formData);
+      }
+   }, [file, mutate]);
+
+   useEffect(() => {
+      if (data) {
+         toast("File uploaded successfully");
+         setFile(null);
+      }
+   }, [data]);
+
+   useEffect(() => {
+      if (error) {
+         console.log(error);
+         toast.error(error.response.data.message || "Error uploading file");
+      }
+   }, [error]);
 
    return (
       <div
@@ -101,17 +137,22 @@ const FileUploader: React.FC<FileUploaderProps> = ({
          </label>
          {file && (
             <Button
-               className="bg-blue-500 text-white"
-               onClick={() => setShowUploadModal(true)}
+               className="bg-blue-500 text-white cursor-pointer"
+               disabled={isPending}
+               onClick={handleUpload}
             >
                Upload File
             </Button>
          )}
 
-         <LoaderModal
-            isOpen={showUploadModal}
-            onClose={() => setShowUploadModal(false)}
-         />
+         {isPending && (
+            <div>
+               <Spinner loading={isPending} />
+               <span className="text-blue-500 font-semibold text-sm mt-3">
+                  Uploading your file please wait...
+               </span>
+            </div>
+         )}
       </div>
    );
 };
