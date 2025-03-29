@@ -10,6 +10,7 @@ import {
   Req,
   UsePipes,
   ValidationPipe,
+  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
@@ -27,30 +28,31 @@ import { ZodValidationPipe } from 'src/pipes/zodValidationPipe';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  findAllOrByEmail(@Query('email') email?: string) {
-    if (email) {
-      return this.userService.findByEmail(email);
-    }
-    return this.userService.findAll();
-  }
-
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req) {
     return this.userService.getProfile(req.user.id);
   }
 
+  @Post('/deleteUser')
   @UseGuards(JwtAuthGuard)
-  @UsePipes(new ZodValidationPipe(updateUserSchema))
-  @Patch()
-  update(@Req() req, @Body() updateUserDto: UpdateUserDTO) {
-    const id = req.user.id;
-    return this.userService.update(id, updateUserDto);
+  remove(@Req() req, @Body() body: any) {
+    return this.userService.remove(req.user.id, body.deleteUserId);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  @Get('/listall')
+  @UseGuards(JwtAuthGuard)
+  listAllUsers(@Req() req) {
+    return this.userService.listAllUsers(req.user.id);
+  }
+
+  @Patch('/updaterole')
+  @UseGuards(JwtAuthGuard)
+  updateRole(@Req() req, @Body() body: any) {
+    return this.userService.updateRole(
+      req.user.id,
+      body.updatingUserId,
+      body.role,
+    );
   }
 }

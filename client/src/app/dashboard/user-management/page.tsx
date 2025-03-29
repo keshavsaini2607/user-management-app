@@ -1,9 +1,12 @@
-import React from 'react'
+import UserTable from "@/components/molecules/UserTable";
+import React from "react";
 
 const UserManagement = () => {
-  return (
-    <div>UserManagement</div>
-  )
-}
+   return (
+      <div>
+         <UserTable />
+      </div>
+   );
+};
 
-export default UserManagement
+export default UserManagement;
