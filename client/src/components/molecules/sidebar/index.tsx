@@ -1,14 +1,26 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, StickyNote, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/state/auth-store";
+import { SideNavLinks } from "@/constants/nav_data";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
    const [isOpen, setIsOpen] = useState(true);
    const [isMobile, setIsMobile] = useState(false);
+   const [activeSideNav, setActiveSideNav] = useState("");
    const { logout } = useAuthStore();
+   const pathname = usePathname();
+
+   useEffect(() => {
+      const activeNav = SideNavLinks.find((link) => link.href === pathname);
+      if (activeNav) {
+         setActiveSideNav(activeNav.title);
+      }
+   }, [pathname]);
 
    useEffect(() => {
       const checkScreenSize = () => {
@@ -26,7 +38,9 @@ export default function Sidebar() {
       <>
          <Button
             variant="ghost"
-            className={`fixed top-4 right-4 z-50 md:hidden ${isOpen ? "hidden" : "block"}`}
+            className={`fixed top-4 right-4 z-50 md:hidden ${
+               isOpen ? "hidden" : "block"
+            }`}
             onClick={() => setIsOpen(true)}
          >
             <Menu size={24} />
@@ -46,11 +60,12 @@ export default function Sidebar() {
                <div className="flex items-center justify-between mb-8 relative">
                   <h2
                      className={cn(
-                        "font-bold text-xl transition-all",
+                        "font-bold text-2xl transition-all flex items-center space-x-1",
                         !isOpen && "md:hidden"
                      )}
                   >
-                     Dashboard
+                     <StickyNote className="text-blue-500" />
+                     <span className="text-blue-500">Doc</span>ify
                   </h2>
                   <Button
                      variant="ghost"
@@ -68,21 +83,34 @@ export default function Sidebar() {
                   </Button>
                </div>
 
-               {/* Add your sidebar navigation items here */}
-               <nav className="space-y-2">
-                  {/* Example navigation item */}
-                  <a
-                     href="#"
-                     className="flex items-center space-x-2 p-2 hover:bg-accent rounded-lg"
-                  >
-                     <span>🏠</span>
-                     <span
-                        className={cn("transition-all", !isOpen && "md:hidden")}
+               <nav className="space-y-2 flex flex-col">
+                  {SideNavLinks.map((link, idx) => (
+                     <Link 
+                        href={link.href} 
+                        key={idx}
+                        className={cn(
+                           "flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100",
+                           activeSideNav === link.title && "bg-blue-50"
+                        )}
                      >
-                        Home
-                     </span>
-                  </a>
-                  {/* Add more navigation items as needed */}
+                        <link.icon 
+                           size={20} 
+                           className={cn(
+                              "text-gray-600",
+                              activeSideNav === link.title && "text-blue-500"
+                           )}
+                        />
+                        <span
+                           className={cn(
+                              "text-gray-600",
+                              activeSideNav === link.title && "text-blue-500",
+                              !isOpen && "md:hidden"
+                           )}
+                        >
+                           {link.title}
+                        </span>
+                     </Link>
+                  ))}
                </nav>
                <div className="absolute bottom-10 w-full">
                   <Button

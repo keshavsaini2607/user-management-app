@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('auth-token')?.value || ''
 
   if (token && isPublicPath) {
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL('/dashboard/home', request.url))
   }
 
   if (!token && !isPublicPath) {
@@ -20,7 +20,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/',
+    '/dashboard',
     '/auth/signin',
     '/auth/signup',
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
