@@ -11,7 +11,7 @@ import { API_ENDPOINTS } from "@/constants/endpoints";
 import { toast } from "sonner";
 
 const SignIn = () => {
-   const { mutate, isPending, error, data } = useApiMutation(
+   const { mutate, isPending, error, data }: any = useApiMutation(
       "POST",
       API_ENDPOINTS.SIGNIN
    );

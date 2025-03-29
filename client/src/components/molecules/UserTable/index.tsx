@@ -37,7 +37,7 @@ const UserTable = () => {
       API_ENDPOINTS.UPDATE_USER_ROLE
    );
 
-   const { mutate: deleteUser, isSuccess } = useApiMutation(
+   const { mutate: deleteUser, isSuccess, isPending: isDeleting } = useApiMutation(
       "POST",
       API_ENDPOINTS.DELETE_USER
    );
@@ -125,7 +125,7 @@ const UserTable = () => {
                            size="icon"
                            onClick={() => handleDelete(user.id)}
                            className="cursor-pointer bg-red-500"
-                           //    disabled={isDeleting}
+                           disabled={isDeleting}
                         >
                            <Trash2 className="h-4 w-4 text-white" />
                         </Button>

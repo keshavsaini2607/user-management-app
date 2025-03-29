@@ -35,7 +35,7 @@ export class AuthService {
     const userInput: Prisma.UserCreateInput = {
       email: createUserDto.email,
       username: createUserDto.username,
-      password: hashedPassword, // Hash the password
+      password: hashedPassword, 
       ...createUserDto,
     };
 

@@ -15,10 +15,6 @@ export const createUserSchema = z.object({
       'Password must contain at least one special character',
     )
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter'),
-  phone: z.string().optional(),
-  brandName: z.string().optional(),
-  address: z.string().optional(),
-  gstNumber: z.string().optional(),
 });
 
 export type CreateUserDto = z.infer<typeof createUserSchema>;

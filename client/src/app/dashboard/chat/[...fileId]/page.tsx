@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { API_ENDPOINTS } from "@/constants/endpoints";
 import { useApiQuery } from "@/hooks/useApi";
-import { useUserStore } from "@/state/user-store";
 import { Bot, Send } from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
