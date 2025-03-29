@@ -4,4 +4,5 @@ export const API_ENDPOINTS = {
   PROFILE: '/user/profile',
   UPLOAD_FILE: '/uploads',
   GET_USER_FILES: '/uploads/userfiles',
+  DELETE_FILE: '/uploads',
 }

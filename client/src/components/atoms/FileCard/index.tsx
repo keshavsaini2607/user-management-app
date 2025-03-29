@@ -1,9 +1,42 @@
 import { Button } from "@/components/ui/button";
+import { API_ENDPOINTS } from "@/constants/endpoints";
+import { useApiMutation } from "@/hooks/useApi";
 import { FileInterface } from "@/types/file.interface";
+import { useQueryClient } from "@tanstack/react-query";
 import { Bot, File, Trash } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { toast } from "sonner";
 
 const FileCard = ({ file }: { file: FileInterface }) => {
+   const {
+      mutate: deleteFile,
+      isPending,
+      isSuccess,
+      error,
+   } = useApiMutation("DELETE", `${API_ENDPOINTS.DELETE_FILE}/${file.id}`);
+   const queryClient = useQueryClient();
+
+   const handleDelete = async () => {
+      try {
+         deleteFile(undefined);
+      } catch (error) {
+         console.error("Error deleting file:", error);
+      }
+   };
+
+   useEffect(() => {
+      if (isSuccess) {
+         toast.success("File deleted successfully");
+         queryClient.invalidateQueries(queryClient.getQueryData(["userfiles"]));
+      }
+   }, [isSuccess]);
+
+   useEffect(() => {
+      if (error) {
+         toast.error("Error deleting file");
+      }
+   });
+
    return (
       <div className="p-4 rounded bg-white shadow-sm w-full sm:w-[300px] md:w-[320px] lg:w-[340px]">
          <div className="flex items-center space-x-2 overflow-hidden">
@@ -27,7 +60,11 @@ const FileCard = ({ file }: { file: FileInterface }) => {
             <Button className="bg-blue-500 cursor-pointer w-full sm:w-auto">
                <Bot className="text-white" />
             </Button>
-            <Button className="bg-red-500 cursor-pointer w-full sm:w-auto">
+            <Button
+               className="bg-red-500 cursor-pointer w-full sm:w-auto"
+               onClick={handleDelete}
+               disabled={isPending}
+            >
                <Trash className="text-white" />
             </Button>
          </footer>

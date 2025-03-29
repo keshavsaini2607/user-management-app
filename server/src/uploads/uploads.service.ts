@@ -91,4 +91,40 @@ export class UploadsService {
       return error;
     }
   }
+
+  async deleteFile(fileId: string, userId: string) {
+    try {
+      const file = await this.databaseService.userUploads.findUnique({
+        where: {
+          id: fileId,
+        },
+      });
+      if (!file) {
+        return {
+          message: 'File not found',
+        };
+      }
+      if (file.userId !== userId) {
+        return {
+          message: 'You are not authorized to delete this file',
+        };
+      }
+      await this.s3
+        .deleteObject({
+          Bucket: this.bucketName,
+          Key: file.filename,
+        })
+        .promise();
+      await this.databaseService.userUploads.delete({
+        where: {
+          id: fileId,
+        },
+      });
+      return {
+        message: 'File deleted',
+      };
+    } catch (error) {
+      return error;
+    }
+  }
 }

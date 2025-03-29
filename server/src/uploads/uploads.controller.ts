@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Post,
   Req,
@@ -35,7 +36,7 @@ export class UploadsController {
       const result = await this.uploadsService.uploadPublicFile(
         file.buffer,
         file.originalname,
-        req.user.id
+        req.user.id,
       );
 
       return res.status(200).json({
@@ -55,5 +56,18 @@ export class UploadsController {
   async getUserFiles(@Req() req) {
     return this.uploadsService.getUserFiles(req.user.id);
   }
-  
+
+  @Delete(':fileId')
+  @UseGuards(JwtAuthGuard)
+  async deleteFile(@Req() req) {
+    try {
+      await this.uploadsService.deleteFile(req.params.fileId, req.user.id);
+      return { message: 'File deleted successfully' };
+    } catch (error) {
+      console.error('Delete error:', error);
+      throw new Error(
+        'Error deleting file: ' + (error.message || 'Unknown error'),
+      );
+    }
+  }
 }
