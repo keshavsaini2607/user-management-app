@@ -1,9 +1,11 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { API_ENDPOINTS } from "@/constants/endpoints";
 import { useApiMutation } from "@/hooks/useApi";
 import { FileInterface } from "@/types/file.interface";
 import { useQueryClient } from "@tanstack/react-query";
 import { Bot, File, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -15,6 +17,7 @@ const FileCard = ({ file }: { file: FileInterface }) => {
       error,
    } = useApiMutation("DELETE", `${API_ENDPOINTS.DELETE_FILE}/${file.id}`);
    const queryClient = useQueryClient();
+   const router = useRouter();
 
    const handleDelete = async () => {
       try {
@@ -57,7 +60,10 @@ const FileCard = ({ file }: { file: FileInterface }) => {
          </div>
          <div className="my-4"></div>
          <footer className="flex items-center gap-2 sm:gap-4 justify-start">
-            <Button className="bg-blue-500 cursor-pointer w-full sm:w-auto">
+            <Button
+               className="bg-blue-500 cursor-pointer w-full sm:w-auto"
+               onClick={() => router.push(`/dashboard/chat/${file.id}`)}
+            >
                <Bot className="text-white" />
             </Button>
             <Button

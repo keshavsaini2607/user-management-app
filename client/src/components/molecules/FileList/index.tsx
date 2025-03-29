@@ -2,23 +2,31 @@
 import FileCard from "@/components/atoms/FileCard";
 import { API_ENDPOINTS } from "@/constants/endpoints";
 import { useApiQuery } from "@/hooks/useApi";
-import React from "react";
+import React, { useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FileInterface } from "@/types/file.interface";
+import { useUserStore } from "@/state/user-store";
 
 const FileList = () => {
+   const { setUserFiles } = useUserStore();
    const { isPending, data } = useApiQuery(
       "userfiles",
       API_ENDPOINTS.GET_USER_FILES
    );
+
+   useEffect(() => {
+      if (data && data.length) {
+         setUserFiles(data);
+      }
+   }, [data]);
 
    return (
       <div className="w-full">
          {isPending ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                {[...Array(4)].map((_, index) => (
-                  <Skeleton 
-                     key={index} 
+                  <Skeleton
+                     key={index}
                      className="w-full h-[200px] rounded-lg"
                   />
                ))}
