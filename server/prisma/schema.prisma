@@ -19,11 +19,24 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  username  String
-  email     String   @unique
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  username  String        @unique
+  email     String        @unique
   password  String
-  role      Role     @default(user)
+  role      Role         @default(user)
+  uploads   UserUploads[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model UserUploads {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  filename  String
+  publicUrl String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

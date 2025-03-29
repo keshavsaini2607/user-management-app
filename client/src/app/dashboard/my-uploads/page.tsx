@@ -1,9 +1,12 @@
-import React from 'react'
+import FileList from "@/components/molecules/FileList";
+import React from "react";
 
 const MyUploads = () => {
-  return (
-    <div>MyUploads</div>
-  )
-}
+   return (
+      <div>
+         <FileList />
+      </div>
+   );
+};
 
-export default MyUploads
+export default MyUploads;

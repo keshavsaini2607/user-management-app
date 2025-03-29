@@ -5,7 +5,6 @@ import {
   Patch,
   Param,
   Delete,
-  ParseIntPipe,
   Query,
   UseGuards,
   Req,
