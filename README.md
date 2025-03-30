@@ -1,4 +1,4 @@
-# Document Management and RAG-based Q&A Application
+# User management and Document based Q&A Interface Application
 
 ## Table of Contents
 1. [Description](#description)
@@ -7,7 +7,7 @@
 4. [Usage](#usage)
 
 ## Description
-The Document Management and RAG-based Q&A Application is designed to manage users, documents, and an ingestion process that generates embeddings for document retrieval in a Q&A setting. It features an Angular-based frontend for user interaction with backend services.
+The Document Management and RAG-based Q&A Application is designed to manage users, documents, and an ingestion process that generates embeddings for document retrieval in a Q&A setting. It features an NextJS frontend for user interaction with backend services.
 
 ## Features
 - **User Authentication**: Sign Up, Login, and Logout interfaces.
