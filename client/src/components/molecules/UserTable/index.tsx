@@ -71,69 +71,71 @@ const UserTable = () => {
    }
 
    return (
-      <div className="rounded-md shadow-sm">
-         <Table>
-            <TableHeader>
-               <TableRow>
-                  <TableHead>Username</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Created At</TableHead>
-                  <TableHead>Updated At</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-               </TableRow>
-            </TableHeader>
-            <TableBody>
-               {!users?.length && (
+      <div className="rounded-md shadow-sm overflow-x-auto">
+         <div className="min-w-[800px]">
+            <Table>
+               <TableHeader>
                   <TableRow>
-                     <TableCell colSpan={6} className="text-center">
-                        No users found
-                     </TableCell>
+                     <TableHead className="whitespace-nowrap">Username</TableHead>
+                     <TableHead className="whitespace-nowrap">Email</TableHead>
+                     <TableHead className="whitespace-nowrap">Role</TableHead>
+                     <TableHead className="whitespace-nowrap">Created At</TableHead>
+                     <TableHead className="whitespace-nowrap">Updated At</TableHead>
+                     <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
                   </TableRow>
-               )}
-               {users?.map((user) => (
-                  <TableRow key={user.id}>
-                     <TableCell className="font-medium">
-                        {user.username}
-                     </TableCell>
-                     <TableCell>{user.email}</TableCell>
-                     <TableCell>
-                        <Select
-                           defaultValue={user.role}
-                           onValueChange={(value) =>
-                              handleRoleChange(user.id, value)
-                           }
-                        >
-                           <SelectTrigger className="w-[110px]">
-                              <SelectValue />
-                           </SelectTrigger>
-                           <SelectContent>
-                              <SelectItem value="user">User</SelectItem>
-                              <SelectItem value="admin">Admin</SelectItem>
-                           </SelectContent>
-                        </Select>
-                     </TableCell>
-                     <TableCell>
-                        {format(new Date(user.createdAt), "MMM dd, yyyy")}
-                     </TableCell>
-                     <TableCell>
-                        {format(new Date(user.updatedAt), "MMM dd, yyyy")}
-                     </TableCell>
-                     <TableCell className="text-right">
-                        <Button
-                           variant="ghost"
-                           size="icon"
-                           onClick={() => handleDelete(user.id)}
-                           className="cursor-pointer bg-red-500"
-                           disabled={isDeleting}
-                        >
-                           <Trash2 className="h-4 w-4 text-white" />
-                        </Button>
-                     </TableCell>
-                  </TableRow>
-               ))}
-            </TableBody>
-         </Table>
+               </TableHeader>
+               <TableBody>
+                  {!users?.length && (
+                     <TableRow>
+                        <TableCell colSpan={6} className="text-center">
+                           No users found
+                        </TableCell>
+                     </TableRow>
+                  )}
+                  {users?.map((user) => (
+                     <TableRow key={user.id}>
+                        <TableCell className="font-medium whitespace-nowrap">
+                           {user.username}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">{user.email}</TableCell>
+                        <TableCell className="whitespace-nowrap">
+                           <Select
+                              defaultValue={user.role}
+                              onValueChange={(value) =>
+                                 handleRoleChange(user.id, value)
+                              }
+                           >
+                              <SelectTrigger className="w-[110px]">
+                                 <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                 <SelectItem value="user">User</SelectItem>
+                                 <SelectItem value="admin">Admin</SelectItem>
+                              </SelectContent>
+                           </Select>
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                           {format(new Date(user.createdAt), "MMM dd, yyyy")}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                           {format(new Date(user.updatedAt), "MMM dd, yyyy")}
+                        </TableCell>
+                        <TableCell className="text-right whitespace-nowrap">
+                           <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDelete(user.id)}
+                              className="cursor-pointer bg-red-500"
+                              disabled={isDeleting}
+                           >
+                              <Trash2 className="h-4 w-4 text-white" />
+                           </Button>
+                        </TableCell>
+                     </TableRow>
+                  ))}
+               </TableBody>
+            </Table>
+         </div>
       </div>
    );
 };

@@ -3,7 +3,7 @@ import React from "react";
 
 const UserManagement = () => {
    return (
-      <div>
+      <div className="overflow-scroll w-screen md:w-auto">
          <UserTable />
       </div>
    );
