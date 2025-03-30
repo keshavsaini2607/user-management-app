@@ -18,7 +18,7 @@ The Document Management and RAG-based Q&A Application is designed to manage user
 
 ## Installation
 
-![video]https://www.loom.com/share/1b9740fdf46b47169ecf0fe46701672b?sid=8a394463-30c6-4ba3-972d-33fa30505d28
+https://www.loom.com/share/a15908a1a94b4c3f8666db1c7cbf9a2f?sid=449254c0-b7f2-4238-9f29-d681120ebfc9
 
 ### Prerequisites
 Ensure the following are installed:
