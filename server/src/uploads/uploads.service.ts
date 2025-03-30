@@ -30,13 +30,17 @@ export class UploadsService {
         .promise();
 
       if (result && result?.Location) {
-        await this.databaseService.userUploads.create({
+        const dbFileEntry = await this.databaseService.userUploads.create({
           data: {
             publicUrl: result.Location,
             userId: userId,
             filename,
           },
         });
+
+        if(dbFileEntry) {
+          result['fileId'] = dbFileEntry.id;
+        }
       }
 
       return result;

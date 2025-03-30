@@ -8,6 +8,8 @@ async function bootstrap() {
   app.enableCors({
     allowedHeaders: '*', // Fixed by replacing the asterisk with a string literal,
     origin: '*',
+    methods: '*',
+    credentials: true,
   });
   app.use(cookieParser());
   await app.listen(process.env.PORT ?? 8000);

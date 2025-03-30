@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Menu, StickyNote, X } from "lucide-react";
+import { LogOut, Menu, StickyNote, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/state/auth-store";
@@ -119,10 +119,19 @@ export default function Sidebar() {
                </nav>
                <div className="absolute bottom-10 w-full">
                   <Button
-                     className="bg-blue-400 w-[85%] text-white cursor-pointer"
+                     className={`bg-blue-400 ${isOpen ? 'w-[85%]' : 'w-[60%]'} text-white cursor-pointer`}
                      onClick={logout}
                   >
-                     Logout
+                     {!isOpen ? (
+                        <LogOut />
+                     ) : (
+                        <>
+                           <span className="flex flex-row items-center gap-2">
+                              <LogOut />
+                              <span>Logout</span>
+                           </span>
+                        </>
+                     )}
                   </Button>
                </div>
             </div>

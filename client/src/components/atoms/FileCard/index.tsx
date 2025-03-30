@@ -41,37 +41,38 @@ const FileCard = ({ file }: { file: FileInterface }) => {
    });
 
    return (
-      <div className="p-4 rounded bg-white shadow-sm w-full sm:w-[300px] md:w-[320px] lg:w-[340px]">
+      <div className="p-3 sm:p-4 rounded bg-white shadow-sm w-full max-w-[340px] mx-auto">
          <div className="flex items-center space-x-2 overflow-hidden">
-            <a href={file.publicUrl}>
+            <a href={file.publicUrl} className="flex-shrink-0">
                <File
-                  className="text-blue-600 bg-blue-100 rounded p-1 flex-shrink-0"
-                  width={30}
-                  height={30}
+                  className="text-blue-600 bg-blue-100 rounded p-1"
+                  width={24}
+                  height={24}
+                  className="sm:w-[30px] sm:h-[30px]"
                />
             </a>
-            <span className="truncate">{file.filename}</span>
+            <span className="truncate text-sm sm:text-base">{file.filename}</span>
          </div>
-         <div className="border-b border-gray-200 space-y-4 mt-4"></div>
-         <div className="mt-3">
-            <span className="text-sm text-gray-600 font-semibold block">
+         <div className="border-b border-gray-200 my-3 sm:my-4"></div>
+         <div>
+            <span className="text-xs sm:text-sm text-gray-600 font-semibold block">
                File Uploaded On: {new Date(file.createdAt).toDateString()}
             </span>
          </div>
-         <div className="my-4"></div>
+         <div className="my-3 sm:my-4"></div>
          <footer className="flex items-center gap-2 sm:gap-4 justify-start">
             <Button
-               className="bg-blue-500 cursor-pointer w-full sm:w-auto"
+               className="bg-blue-500 hover:bg-blue-600 transition-colors p-2 sm:p-3 flex-1 sm:flex-none"
                onClick={() => router.push(`/dashboard/chat/${file.id}`)}
             >
-               <Bot className="text-white" />
+               <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </Button>
             <Button
-               className="bg-red-500 cursor-pointer w-full sm:w-auto"
+               className="bg-red-500 hover:bg-red-600 transition-colors p-2 sm:p-3 flex-1 sm:flex-none"
                onClick={handleDelete}
                disabled={isPending}
             >
-               <Trash className="text-white" />
+               <Trash className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </Button>
          </footer>
       </div>

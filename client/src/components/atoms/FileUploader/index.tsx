@@ -3,10 +3,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useApiMutation } from "@/hooks/useApi";
-import { API_ENDPOINTS } from "@/constants/endpoints";
 import Spinner from "../Spinner";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { uploadFile } from "@/api/upload";
+import LoaderModal from "../LoaderModal";
 
 interface FileUploaderProps {
    onFileSelect?: (file: File) => void;
@@ -17,16 +18,14 @@ const FileUploader: React.FC<FileUploaderProps> = ({
    onFileSelect,
    accept = "application/pdf",
 }) => {
-   const { isPending, data, error, mutate } = useApiMutation(
-      "POST",
-      API_ENDPOINTS.UPLOAD_FILE,
-      {},
-      {
-         "Content-Type": "multipart/form-data",
-      }
-   );
+   const { isPending, data, error, mutate } = useMutation({
+      mutationFn: (formData: FormData) => uploadFile(formData),
+   });
+
+   console.log({ data });
    const [isDragging, setIsDragging] = useState(false);
    const [file, setFile] = useState<File | null>(null);
+   const [showLoaderModal, setShowLoaderModal] = useState(false);
 
    const handleDrag = useCallback((e: React.DragEvent) => {
       e.preventDefault();
@@ -78,7 +77,8 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
    useEffect(() => {
       if (data) {
-         toast("File uploaded successfully");
+         toast.success("File uploaded successfully");
+         setShowLoaderModal(true);
          setFile(null);
       }
    }, [data]);
@@ -153,6 +153,12 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                </span>
             </div>
          )}
+
+         <LoaderModal 
+            isOpen={showLoaderModal}
+            onClose={() => setShowLoaderModal(false)}
+            fileId={data?.data?.fileId}
+         />
       </div>
    );
 };
