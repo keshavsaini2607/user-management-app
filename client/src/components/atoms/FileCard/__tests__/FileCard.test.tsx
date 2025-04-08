@@ -1,91 +1,131 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import FileCard from '../index'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import FileCard from "../index";
+import { useApiMutation } from "@/hooks/useApi";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-// Mock next/navigation
-jest.mock('next/navigation', () => ({
-  useRouter() {
-    return {
-      push: jest.fn(),
-      replace: jest.fn(),
-      prefetch: jest.fn(),
-    }
-  }
-}))
-
-// Mock sonner toast
-jest.mock('sonner', () => ({
+// Mock the dependencies
+jest.mock("@/hooks/useApi", () => ({
+  useApiMutation: jest.fn().mockReturnValue({
+    mutate: jest.fn(),
+    isPending: false,
+    isSuccess: false,
+    error: null,
+  }),
+}));
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
+jest.mock("@tanstack/react-query", () => ({
+  useQueryClient: jest.fn(),
+}));
+jest.mock("sonner", () => ({
   toast: {
     success: jest.fn(),
     error: jest.fn(),
-  }
-}))
-
-const mockFile = {
-  id: '1',
-  filename: 'test.pdf',
-  publicUrl: 'http://example.com/test.pdf',
-  createdAt: '2024-03-15T10:00:00Z',
-}
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-    mutations: {
-      retry: false,
-    },
   },
-})
+}));
 
-const MockFileCard = () => (
-  <QueryClientProvider client={queryClient}>
-    <FileCard file={mockFile} />
-  </QueryClientProvider>
-)
+describe("FileCard", () => {
+  const mockFile = {
+    id: "1",
+    filename: "test-file.pdf",
+    publicUrl: "http://example.com/test-file.pdf",
+    createdAt: "2024-01-01T00:00:00.000Z",
+  };
 
-describe('FileCard', () => {
-  beforeAll(() => {
-    // Mock window.URL.createObjectURL
-    global.URL.createObjectURL = jest.fn()
-  })
+  const mockRouter = {
+    push: jest.fn(),
+  };
+
+  const mockQueryClient = {
+    invalidateQueries: jest.fn(),
+    getQueryData: jest.fn(),
+  };
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    queryClient.clear()
-  })
+    jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue(mockRouter);
+    (useQueryClient as jest.Mock).mockReturnValue(mockQueryClient);
+    (useApiMutation as jest.Mock).mockReturnValue({
+      mutate: jest.fn(),
+      isPending: false,
+      isSuccess: false,
+      error: null,
+    });
+  });
 
-  afterEach(() => {
-    jest.resetAllMocks()
-  })
+  it("renders file information correctly", () => {
+    render(<FileCard file={mockFile} />);
+    
+    expect(screen.getByText(mockFile.filename)).toBeInTheDocument();
+    expect(screen.getByText("File Uploaded On: Mon Jan 01 2024")).toBeInTheDocument();
+    expect(screen.getByTestId("chat-button")).toBeInTheDocument();
+    expect(screen.getByTestId("delete-button")).toBeInTheDocument();
+  });
 
-  it('renders file information correctly', () => {
-    render(<MockFileCard />)
+  it("navigates to chat page when chat button is clicked", () => {
+    render(<FileCard file={mockFile} />);
     
-    expect(screen.getByText(mockFile.filename)).toBeInTheDocument()
-    expect(screen.getByText(/File Uploaded On:/)).toBeInTheDocument()
-  })
+    const chatButton = screen.getByTestId("chat-button");
+    fireEvent.click(chatButton);
+    
+    expect(mockRouter.push).toHaveBeenCalledWith(`/dashboard/chat/${mockFile.id}`);
+  });
 
-  it('has working delete button', async () => {
-    render(<MockFileCard />)
-    
-    const buttons = screen.getAllByRole('button')
-    const deleteButton = buttons[1]
-    expect(deleteButton).toBeInTheDocument()
-    
-    fireEvent.click(deleteButton)
-    // Wait for mutation to complete
-    await new Promise(resolve => setTimeout(resolve, 0))
-  })
+  it("handles successful file deletion", async () => {
+    const mockDeleteFile = jest.fn();
+    (useApiMutation as jest.Mock).mockReturnValue({
+      mutate: mockDeleteFile,
+      isPending: false,
+      isSuccess: true,
+      error: null,
+    });
 
-  it('has working chat button', () => {
-    const { container } = render(<MockFileCard />)
+    render(<FileCard file={mockFile} />);
     
-    const buttons = screen.getAllByRole('button')
-    const chatButton = buttons[0]
-    expect(chatButton).toBeInTheDocument()
+    const deleteButton = screen.getByTestId("delete-button");
+    fireEvent.click(deleteButton);
     
-    fireEvent.click(chatButton)
-  })
-})
+    await waitFor(() => {
+      expect(mockDeleteFile).toHaveBeenCalledWith(undefined);
+      expect(toast.success).toHaveBeenCalledWith("File deleted successfully");
+      expect(mockQueryClient.invalidateQueries).toHaveBeenCalled();
+    });
+  });
+
+  it("handles file deletion error", async () => {
+    const mockDeleteFile = jest.fn();
+    (useApiMutation as jest.Mock).mockReturnValue({
+      mutate: mockDeleteFile,
+      isPending: false,
+      isSuccess: false,
+      error: new Error("Delete failed"),
+    });
+
+    render(<FileCard file={mockFile} />);
+    
+    const deleteButton = screen.getByTestId("delete-button");
+    fireEvent.click(deleteButton);
+    
+    await waitFor(() => {
+      expect(mockDeleteFile).toHaveBeenCalledWith(undefined);
+      expect(toast.error).toHaveBeenCalledWith("Error deleting file");
+    });
+  });
+
+  it("disables delete button while deletion is pending", () => {
+    (useApiMutation as jest.Mock).mockReturnValue({
+      mutate: jest.fn(),
+      isPending: true,
+      isSuccess: false,
+      error: null,
+    });
+
+    render(<FileCard file={mockFile} />);
+    
+    const deleteButton = screen.getByTestId("delete-button");
+    expect(deleteButton).toBeDisabled();
+  });
+});

@@ -19,12 +19,13 @@ const FieldRenderer: React.FC<Props> = ({ field, register, errors }) => {
       case "email":
          return (
             <div className="flex flex-col gap-1">
-               <Label className="text-gray-600">{field.label}</Label>
+               <Label className="text-gray-600" htmlFor={field.name}>{field.label}</Label>
                <Input
                   {...register(field.name, field.validation)}
                   type={field.type}
                   placeholder={field.placeholder}
                   name={field.name}
+                  id={field.name}
                   className="outline-none border active:border active:border-blue-400 border-gray-300 rounded-md px-3 py-2 w-full"
                />
                {errors && errors[field.name] && (
@@ -37,13 +38,14 @@ const FieldRenderer: React.FC<Props> = ({ field, register, errors }) => {
       case "password":
          return (
             <div className="flex flex-col gap-1">
-               <Label className="text-gray-600">{field.label}</Label>
+               <Label className="text-gray-600" htmlFor={field.name}>{field.label}</Label>
                <div className="relative">
                   <Input
                      {...register(field.name, field.validation)}
                      type={showPassword ? "text" : "password"}
                      placeholder={field.placeholder}
                      name={field.name}
+                     id={field.name}
                      className="outline-none border active:border active:border-blue-400 border-gray-300 rounded-md px-3 py-2 w-full pr-10"
                   />
                   <button

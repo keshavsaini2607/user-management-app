@@ -25,7 +25,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-const UserTable = () => {
+export const UserTable = () => {
    const queryClient = useQueryClient();
    const { isPending, data: users } = useApiQuery(
       "allusers",
@@ -140,4 +140,3 @@ const UserTable = () => {
    );
 };
 
-export default UserTable;

@@ -15,6 +15,7 @@ const DynamicForm: React.FC<IForm> = ({
          <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
+            role="form"
          >
             {formFields.map((field, idx) => (
                <FieldRenderer field={field} key={idx} register={register} errors={errors} />

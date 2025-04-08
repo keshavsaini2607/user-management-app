@@ -10,7 +10,7 @@ const override: CSSProperties = {
 
 function Spinner({ loading }: { loading: boolean }) {
    return (
-      <div className="sweet-loading">
+      <div className="sweet-loading" data-testid="spinner">
          <CircleLoader
             color={"#2B7FFF"}
             loading={loading}

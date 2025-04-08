@@ -6,7 +6,7 @@ import { useUserStore } from "@/state/user-store";
 import { ShieldUser, User } from "lucide-react";
 import { useEffect } from "react";
 
-export default function Navbar() {
+export function Navbar() {
    const { setUser, user } = useUserStore();
    const { data } = useApiQuery("user-profile", API_ENDPOINTS.PROFILE);
 

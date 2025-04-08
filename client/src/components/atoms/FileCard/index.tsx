@@ -48,7 +48,6 @@ const FileCard = ({ file }: { file: FileInterface }) => {
                   className="text-blue-600 bg-blue-100 rounded p-1"
                   width={24}
                   height={24}
-                  className="sm:w-[30px] sm:h-[30px]"
                />
             </a>
             <span className="truncate text-sm sm:text-base">{file.filename}</span>
@@ -64,6 +63,8 @@ const FileCard = ({ file }: { file: FileInterface }) => {
             <Button
                className="bg-blue-500 hover:bg-blue-600 transition-colors p-2 sm:p-3 flex-1 sm:flex-none"
                onClick={() => router.push(`/dashboard/chat/${file.id}`)}
+               aria-label="Chat"
+               data-testid="chat-button"
             >
                <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </Button>
@@ -71,6 +72,8 @@ const FileCard = ({ file }: { file: FileInterface }) => {
                className="bg-red-500 hover:bg-red-600 transition-colors p-2 sm:p-3 flex-1 sm:flex-none"
                onClick={handleDelete}
                disabled={isPending}
+               aria-label="Delete"
+               data-testid="delete-button"
             >
                <Trash className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </Button>

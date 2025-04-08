@@ -9,7 +9,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/state/user-store";
 
-export default function Sidebar() {
+export function Sidebar() {
    const { user } = useUserStore();
    const [isOpen, setIsOpen] = useState(true);
    const [isMobile, setIsMobile] = useState(false);
