@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Sidebar from "@/components/molecules/sidebar";
-import { Navbar } from "@/components/molecules";
+import { Navbar, Sidebar } from "@/components/molecules";
 
 export const metadata: Metadata = {
    title: "User Management System | Dashboard",

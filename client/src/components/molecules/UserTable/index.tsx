@@ -108,7 +108,7 @@ export const UserTable = () => {
                               <SelectTrigger className="w-[110px]">
                                  <SelectValue />
                               </SelectTrigger>
-                              <SelectContent>
+                              <SelectContent className="bg-white border-none shadow-sm">
                                  <SelectItem value="user">User</SelectItem>
                                  <SelectItem value="admin">Admin</SelectItem>
                               </SelectContent>

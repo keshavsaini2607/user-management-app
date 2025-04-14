@@ -1,4 +1,4 @@
-import UserTable from "@/components/molecules/UserTable";
+import { UserTable } from "@/components/molecules";
 import React from "react";
 
 const UserManagement = () => {

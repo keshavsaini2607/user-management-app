@@ -1,4 +1,4 @@
-import FileList from "@/components/molecules/FileList";
+import { FileList } from "@/components/molecules";
 import React from "react";
 
 const MyUploads = () => {
